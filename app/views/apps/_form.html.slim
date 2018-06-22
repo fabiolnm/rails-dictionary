@@ -1,0 +1,11 @@
+.card
+  .card-header
+    h4.card-title App
+
+  = form_for @app do |f|
+    .card-body
+      .form-group
+        = f.label :path
+        = f.text_field :path, class: 'form-control'
+
+    .card-footer = f.submit nil, class: 'btn btn-primary'

@@ -1,0 +1,17 @@
+h1
+  Apps
+  = link_to 'New App', :new_app, class: 'btn btn-secondary btn-sm float-right'
+
+table.table.table-striped.table-sm
+  thead
+    tr
+      th Name
+      th Path to config
+      th
+  tbody
+    - @apps.each do |app|
+      tr
+        td = link_to app.name, app
+        td = app.path
+        td = link_to 'Destroy', app, method: :delete,
+        class: 'btn btn-sm btn-danger', data: { confirm: 'Are you sure?' }

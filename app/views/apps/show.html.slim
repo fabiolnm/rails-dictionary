@@ -1,0 +1,19 @@
+h3
+  = @app.name
+  small
+    |  - #{@app.path}
+  = link_to 'Edit', [:edit, @app], class: 'btn btn-sm btn-secondary float-right'
+
+h4 Locale files
+- if @app.translation_files.empty?
+  p Not found
+- else
+  ul
+    - @app.translation_files.each do |name, translations|
+      li
+        = link_to name, '#'
+        - if translations.present?
+          |  (#{translations.join ', '})
+
+
+= link_to 'Back', :apps
