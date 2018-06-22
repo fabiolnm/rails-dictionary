@@ -1,0 +1,22 @@
+h3
+  = @app.name
+  small
+    |  - #{@app.path}
+
+h4 = params[:base]
+
+table.table.table-striped.table-sm style="table-layout: fixed"
+  thead
+    - max_col_width = 100.0 / (@languages.count + 10)
+    th style="min-width: #{max_col_width * 2}%" Keys
+    - @languages.each do |language|
+      th style="max-width: #{max_col_width}%" = language
+  tbody style="font-size: 11px"
+    - @dictionary.values.first.each do |key, value|
+      = render 'tree', key: key, value: value, depth: 0
+
+sass:
+  .ellipsis
+    overflow: hidden
+    white-space: nowrap
+    text-overflow: ellipsis

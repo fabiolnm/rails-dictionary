@@ -9,9 +9,9 @@ h4 Locale files
   p Not found
 - else
   ul
-    - @app.translation_files.each do |name, translations|
+    - @app.translation_files.each do |base, translations|
       li
-        = link_to name, '#'
+        = link_to base, [:edit, @app, :translations, base: base]
         - if translations.present?
           |  (#{translations.join ', '})
 

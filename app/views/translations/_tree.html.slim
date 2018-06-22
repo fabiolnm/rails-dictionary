@@ -1,0 +1,13 @@
+tr
+  td class="ellipsis"
+    = ('&nbsp;' * depth * 3).html_safe
+    = [key].flatten.last
+  - if value.is_a? Hash
+    td colspan="#{@languages.count}"
+  - else
+    - @languages.each do |language|
+      td = @dictionary.dig *[language, key].flatten
+
+- if value.is_a? Hash
+  - value.each do |k,v|
+    = render 'tree', key: [key, k], value: v, depth: depth + 1
