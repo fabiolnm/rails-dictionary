@@ -17,7 +17,14 @@ class App < ApplicationRecord
   def dictionary_for(base)
     load_yaml(base).tap do |dictionary|
       languages_for(base).each do |language|
-        lang_dict = load_yaml "#{base.gsub('.yml', '')}.#{language}.yml"
+        filename = "#{base.gsub('.yml', '')}.#{language}.yml"
+        lang_dict = load_yaml filename
+
+        detected_language = lang_dict.keys.first
+        if detected_language != language
+          raise "Wrong root at #{filename}: #{language} != #{detected_language}"
+        end
+
         complete_keys dictionary.values[0], lang_dict.values[0], language
         dictionary.merge! lang_dict
       end
@@ -31,6 +38,7 @@ class App < ApplicationRecord
     lang = keys.shift
     last = keys.pop
 
+    dict[lang] ||= {}
     values = dict[lang]
 
     keys.each do |k|
@@ -56,6 +64,8 @@ class App < ApplicationRecord
   end
 
   def complete_keys(dictionary, lang_dict, lang)
+    return if lang_dict.blank?
+
     lang_dict.each do |k,v|
       key = k.to_s
 
