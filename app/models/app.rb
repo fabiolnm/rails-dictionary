@@ -63,9 +63,28 @@ class App < ApplicationRecord
   end
 
   def write(base, default, lang, dict)
+    lang_dict = normalize dict[default], dict[lang]
+
     filename = lang_filename base, default, lang
     File.open "#{path}/config/locales/#{filename}", 'w' do |f|
-      f.write dict.slice(lang).to_yaml[4..-1]
+      f.write({ lang => lang_dict }.to_yaml[4..-1])
+    end
+  end
+
+  def normalize(base_dict, lang_dict)
+    {}.tap do |res|
+      base_dict.keys.each do |k, v|
+        next unless lang_dict.has_key? k
+        if v.is_a? Hash
+          lang_dict[k] ||= {}
+          unless lang_dict[k].is_a? Hash
+            raise "#{k}=#{v} is not a hash in lang locale"
+          end
+          res[k] = normalize v, lang_dict[k]
+        else
+          res[k] = lang_dict[k]
+        end
+      end
     end
   end
 
