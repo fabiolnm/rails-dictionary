@@ -16,6 +16,7 @@ table.table.table-striped.table-sm style="table-layout: fixed"
       = render 'tree', key: key, value: value, depth: 0
 
 = form_with url: [@app, :translations], method: :put, id: :tform
+  = hidden_field_tag :base, params[:base]
   = hidden_field_tag :entry
   = hidden_field_tag :value
 

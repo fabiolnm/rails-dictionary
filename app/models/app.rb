@@ -24,6 +24,16 @@ class App < ApplicationRecord
     end
   end
 
+  def update_translation(base:, entry:, value:)
+    dict = dictionary_for base
+    default = dict.keys.first
+
+    keys = entry.split '.'
+    lang = keys.delete_at 0
+
+    write base, default, lang, dict
+  end
+
   private
 
   def init_name
@@ -50,5 +60,16 @@ class App < ApplicationRecord
         dictionary[key] ||= nil
       end
     end
+  end
+
+  def write(base, default, lang, dict)
+    filename = lang_filename base, default, lang
+    File.open "#{path}/config/locales/#{filename}", 'w' do |f|
+      f.write dict.slice(lang).to_yaml[4..-1]
+    end
+  end
+
+  def lang_filename(base, default, lang)
+    base.gsub '.yml', ['', (lang if lang != default), 'yml'].compact.join('.')
   end
 end

@@ -7,6 +7,8 @@ class TranslationsController < ApplicationController
   end
 
   def update
+    @app.update_translation base: params[:base],
+      entry: params[:entry], value: params[:value]
   end
 
   private
