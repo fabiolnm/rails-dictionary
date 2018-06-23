@@ -34,19 +34,15 @@ class App < ApplicationRecord
   def update_translation(base:, entry:, value: nil)
     dict = dictionary_for base
 
-    keys = entry.split '.'
-    lang = keys.shift
-    last = keys.pop
-
+    path = entry.split '.'
+    lang = path.shift
     dict[lang] ||= {}
-    values = dict[lang]
 
-    keys.each do |k|
-      values[k] ||= {}
-      raise "#{keys} is not a hash in #{lang}" unless values[k].is_a? Hash
-      values = values[k]
+    if value.present?
+      push dict[lang], path, value
+    else
+      clean dict[lang], path
     end
-    values[last] = value
 
     write base, dict, lang
   end
@@ -81,6 +77,25 @@ class App < ApplicationRecord
     end
   end
 
+  def push(values, path, value)
+    k = path.shift
+    if path.blank?
+      values[k] = value
+    else
+      values[k] ||= {}
+      raise "#{keys}: not a hash in target dialect" unless values[k].is_a? Hash
+      push values[k], path, value
+    end
+  end
+
+  def clean(values, path)
+    return if values.nil?
+
+    k = path.shift
+    clean values[k], path.dup if path.present?
+    values.delete k if path.blank? || values[k].blank?
+  end
+
   def write(base, dict, lang)
     default = dict.keys.first
     lang_dict =
@@ -90,6 +105,7 @@ class App < ApplicationRecord
     filename = lang_filename base, default, lang
     File.open "#{path}/config/locales/#{filename}", 'w' do |f|
       f.write({ lang => lang_dict }.to_yaml[4..-1])
+      f.flush
     end
   end
 
