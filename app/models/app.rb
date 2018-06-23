@@ -31,7 +31,7 @@ class App < ApplicationRecord
     end
   end
 
-  def update_translation(base:, entry:, value:)
+  def update_translation(base:, entry:, value: nil)
     dict = dictionary_for base
 
     keys = entry.split '.'

@@ -3,7 +3,15 @@ h3
   small
     |  - #{@app.path}
 
-h4 = params[:base]
+h4
+  = params[:base]
+  = form_tag [@app, :translations], class: 'float-right'
+    .input-group.input-group-sm
+      = hidden_field_tag :base, params[:base]
+      = text_field_tag :locale, nil, placeholder: 'xx, xx-YY',
+        class: 'form-control', style: 'width: 80px'
+      .input-group-append
+        = submit_tag 'Add dialect', class: 'btn btn-sm btn-secondary'
 
 table.table.table-striped.table-sm style="table-layout: fixed"
   thead
