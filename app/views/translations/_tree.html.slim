@@ -6,7 +6,9 @@ tr
     td colspan="#{@languages.count}"
   - else
     - @languages.each do |language|
-      td = @dictionary.dig *[language, key].flatten
+      - keys = *[language, key].flatten
+      td.entry id="#{keys.join '.'}"
+        = @dictionary.dig *keys
 
 - if value.is_a? Hash
   - value.each do |k,v|

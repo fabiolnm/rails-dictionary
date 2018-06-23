@@ -15,8 +15,47 @@ table.table.table-striped.table-sm style="table-layout: fixed"
     - @dictionary.values.first.each do |key, value|
       = render 'tree', key: key, value: value, depth: 0
 
+= form_with url: [@app, :translations], method: :put, id: :tform
+  = hidden_field_tag :entry
+  = hidden_field_tag :value
+
 sass:
   .ellipsis
     overflow: hidden
     white-space: nowrap
     text-overflow: ellipsis
+
+coffee:
+  window.previous_value = ''
+  window.current_selection = false
+
+  elements = document.querySelectorAll '.entry'
+  for e in elements
+    e.addEventListener 'click', (evt)->
+      if current_selection
+        selected = evt.target.id
+        if selected != current_selection && selected != "_#{current_selection}"
+          alert "Cancel or save #{current_selection}"
+          field = document.getElementById "_#{current_selection}"
+          field.focus()
+      else
+        window.current_selection = evt.target.id
+        window.previous_value = evt.target.innerHTML
+        evt.target.innerHTML = """
+          <input id="_#{current_selection}" value="#{evt.target.innerText}" />
+          <br>
+          <span style="color: red">Esc to cancel, Enter to save</span>
+        """
+
+        field = document.getElementById "_#{current_selection}"
+        field.focus()
+        field.addEventListener 'keyup', (evt)->
+          entry_id = field.id.slice 1
+          if evt.keyCode == 27
+            document.getElementById(entry_id).innerHTML = previous_value
+            window.current_selection = false
+            window.previous_value = ''
+          else if evt.keyCode == 13
+            tform.elements.entry.value = entry_id
+            tform.elements.value.value = evt.target.value
+            Rails.fire(tform, 'submit')

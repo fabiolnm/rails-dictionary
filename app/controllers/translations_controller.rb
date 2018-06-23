@@ -6,6 +6,9 @@ class TranslationsController < ApplicationController
     @languages = @dictionary.keys
   end
 
+  def update
+  end
+
   private
 
   def set_app
