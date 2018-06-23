@@ -26,12 +26,21 @@ class App < ApplicationRecord
 
   def update_translation(base:, entry:, value:)
     dict = dictionary_for base
-    default = dict.keys.first
 
     keys = entry.split '.'
-    lang = keys.delete_at 0
+    lang = keys.shift
+    last = keys.pop
 
-    write base, default, lang, dict
+    values = dict[lang]
+
+    keys.each do |k|
+      values[k] ||= {}
+      raise "#{keys} is not a hash in #{lang}" unless values[k].is_a? Hash
+      values = values[k]
+    end
+    values[last] = value
+
+    write base, dict, lang
   end
 
   private
@@ -62,8 +71,11 @@ class App < ApplicationRecord
     end
   end
 
-  def write(base, default, lang, dict)
-    lang_dict = normalize dict[default], dict[lang]
+  def write(base, dict, lang)
+    default = dict.keys.first
+    lang_dict =
+      lang == default ? dict[default] :
+      normalize(dict[default], dict[lang])
 
     filename = lang_filename base, default, lang
     File.open "#{path}/config/locales/#{filename}", 'w' do |f|
