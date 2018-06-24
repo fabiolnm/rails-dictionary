@@ -1,7 +1,8 @@
-tr
+- key = [key].flatten
+tr id="row_#{key.join '.'}"
   td class="ellipsis"
     = ('&nbsp;' * depth * 3).html_safe
-    = [key].flatten.last
+    = key.last
   - if value.is_a? Hash
     td colspan="#{@languages.count}"
   - else

@@ -1,4 +1,19 @@
 previous_value = '';
 current_selection = false;
-document.getElementById('<%= params[:entry] %>')
-  .innerHTML = '<%= params[:value] %>';
+
+<% if params[:value].present? %>
+  document.getElementById('<%= params[:entry] %>')
+    .innerHTML = '<%= params[:value] %>';
+<% else %>
+  <% dict = @app.dictionary_for(params[:base]).values.first %>
+  <% path = params[:entry].split '.' %>
+  <% for i in 1..(path.count - 1) %>
+    <% keys = path[1..i] %>
+    <% if dict.has_key? keys.last %>
+      <% dict = dict[keys.last] %>
+    <% else %>
+      var row = document.getElementById('row_<%= keys.join '.' %>');
+      row.parentNode.removeChild(row);
+    <% end %>
+  <% end %>
+<% end %>
