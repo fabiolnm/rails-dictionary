@@ -8,7 +8,7 @@ tr id="row_#{key.join '.'}"
   - else
     - @languages.each do |language|
       - keys = *[language, key].flatten
-      td.entry id="#{keys.join '.'}"
+      td.entry id="#{keys.join '.'}" title="#{keys.join '.'}"
         = @dictionary.dig *keys
 
 - if value.is_a? Hash

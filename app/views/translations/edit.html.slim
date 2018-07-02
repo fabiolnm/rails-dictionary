@@ -50,16 +50,23 @@ coffee:
       else
         window.current_selection = evt.target.id
         window.previous_value = evt.target.innerHTML
-        evt.target.innerHTML = """
-          <input id="_#{current_selection}" value="#{evt.target.innerText}" />
-          <br>
-          <span style="color: red">Esc to cancel, Enter to save</span>
-        """
 
-        field = document.getElementById "_#{current_selection}"
-        field.focus()
-        field.addEventListener 'keyup', (evt)->
-          entry_id = field.id.slice 1
+        instructions = document.createElement 'span'
+        instructions.style = 'color: red'
+        instructions.innerText = 'Esc to cancel, Enter to save'
+
+        input = document.createElement 'input'
+        input.id = "_#{current_selection}"
+        input.value = evt.target.innerText
+
+        evt.target.innerHTML = ''
+        evt.target.appendChild input
+        evt.target.appendChild document.createElement 'br'
+        evt.target.appendChild instructions
+
+        input.focus()
+        input.addEventListener 'keyup', (evt)->
+          entry_id = input.id.slice 1
           if evt.keyCode == 27
             document.getElementById(entry_id).innerHTML = previous_value
             window.current_selection = false
