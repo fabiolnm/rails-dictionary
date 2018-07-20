@@ -1,10 +1,9 @@
 previous_value = '';
 current_selection = false;
+entry = document.getElementById('<%= params[:entry] %>');
+entry.innerHTML = '<%= params[:value] %>';
 
-<% if params[:value].present? %>
-  document.getElementById('<%= params[:entry] %>')
-    .innerHTML = '<%= params[:value] %>';
-<% else %>
+<% if params[:value].blank? %>
   <% dict = @app.dictionary_for(params[:base]).values.first %>
   <% path = params[:entry].split '.' %>
   <% for i in 1..(path.count - 1) %>
