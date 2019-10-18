@@ -2,6 +2,6 @@
   "name": "rails-dictionary",
   "private": true,
   "dependencies": {
-    "bootstrap": "^4.1.1"
+    "bootstrap": "^4.3.1"
   }
 }
