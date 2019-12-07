@@ -1,9 +1,6 @@
 ---
 name: Bug report
 about: aaa
-title: ''
-labels: ''
-assignees: ''
 
 ---
 
